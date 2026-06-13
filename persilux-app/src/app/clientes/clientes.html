@@ -1,0 +1,54 @@
+<div class="contenedor-principal">
+  <div class="cabecera">
+    <h2>Gestión de Clientes</h2>
+    <button class="btn-nuevo" (click)="toggleFormulario()">
+      {{ mostrarFormulario ? 'Cancelar' : '+ Registrar Cliente' }}
+    </button>
+  </div>
+
+  <div class="tarjeta-formulario" *ngIf="mostrarFormulario">
+    <h3>Nuevo Cliente</h3>
+    <div class="grid-inputs">
+      <input type="text" [(ngModel)]="nuevoCliente.nombre" placeholder="Nombre completo del cliente">
+      <input type="text" [(ngModel)]="nuevoCliente.telefono" placeholder="Teléfono">
+      <input type="text" [(ngModel)]="nuevoCliente.direccion" placeholder="Dirección completa">
+      <input type="email" [(ngModel)]="nuevoCliente.correo" placeholder="Correo electrónico">
+    </div>
+<div class="acciones-form">
+      <button class="btn-guardar" (click)="guardarCliente()">
+        {{ modoEdicion ? 'Actualizar Cliente' : 'Guardar Cliente' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="tarjeta-tabla">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Teléfono</th>
+          <th>Dirección</th>
+          <th>Correo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of clientes"> <td><strong>#{{ cliente.id }}</strong></td>
+          <td>{{ cliente.nombre }}</td>
+          <td>{{ cliente.telefono }}</td>
+          <td>{{ cliente.direccion }}</td>
+          <td>{{ cliente.correo }}</td>
+          <td class="celda-acciones">
+            <button class="btn-editar" (click)="editarCliente(cliente)">Actualizar</button>
+            <button *ngIf="rolActual === 'Administrador'" 
+            class="btn-eliminar" 
+            (click)="eliminarCliente(cliente.id)">
+            Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

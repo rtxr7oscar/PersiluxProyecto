@@ -1,0 +1,96 @@
+<div class="contenedor-principal">
+  <div class="cabecera">
+    <h2>Control de Pedidos (Ventas)</h2>
+    <button class="btn-nuevo" (click)="toggleFormulario()">
+      {{ mostrarFormulario ? 'Cancelar' : '+ Generar Pedido' }}
+    </button>
+  </div>
+
+  <div class="tarjeta-formulario" *ngIf="mostrarFormulario">
+    <h3>Detalles del Pedido (Política 50/50)</h3>
+    <div class="grid-inputs">
+
+      <select [(ngModel)]="nuevoPedido.cliente_id">
+        <option value="" disabled selected>Selecciona el cliente...</option>
+        <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nombre }}</option>
+      </select>
+
+      <select [(ngModel)]="nuevoPedido.producto_id" (change)="calcularTotal()">
+        <option value="" disabled selected>Selecciona la persiana/producto...</option>
+        <option *ngFor="let producto of productos" [value]="producto.id">{{ producto.nombre }} (${{ producto.precio }})
+        </option>
+      </select>
+      <select [(ngModel)]="nuevoPedido.vendedor_id">
+        <option value="" disabled selected>Vendido por...</option>
+        <option *ngFor="let emp of empleados" [value]="emp.id">
+          {{ emp.nombre }}
+        </option>
+      </select>
+
+      <input type="text" [(ngModel)]="nuevoPedido.medidas" placeholder="Medidas (ej. 1.80 x 2.10 mt)">
+      <input type="number" [(ngModel)]="nuevoPedido.cantidad" (input)="calcularTotal()" min="1" placeholder="Cantidad">
+
+      <div class="total-box"
+        style="grid-column: 1 / -1; display: flex; justify-content: space-around; background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-top: 10px; border-left: 4px solid #2980b9;">
+        <div><strong>Total:</strong> <br>${{ nuevoPedido.total }}</div>
+        <div style="color: #e67e22;"><strong>Anticipo Requerido (50%):</strong> <br>${{ nuevoPedido.anticipoUI }}</div>
+        <div style="color: #e74c3c;"><strong>Saldo Restante:</strong> <br>${{ nuevoPedido.saldoUI }}</div>
+      </div>
+
+    </div>
+    <div class="acciones-form">
+      <button class="btn-guardar" (click)="guardarPedido()">Registrar con Anticipo</button>
+    </div>
+  </div>
+
+  <div class="tarjeta-tabla">
+    <table>
+      <thead>
+        <tr>
+          <th>Folio</th>
+          <th>Cliente</th>
+          <th>Producto</th>
+          <th>Medidas</th>
+          <th>Cant.</th>
+          <th>Total</th>
+          <th>Anticipo</th>
+          <th>Saldo</th>
+          <th>Estatus</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pedido of pedidos">
+          <td><strong>#{{ pedido.id }}</strong></td>
+          <td>{{ pedido.cliente_nombre }}</td>
+          <td>{{ pedido.producto_nombre }}</td>
+          <td>{{ pedido.medidas || 'N/A' }}</td>
+          <td>{{ pedido.cantidad }}</td>
+          <td><strong>${{ pedido.total }}</strong></td>
+          <td style="color: #e67e22;">${{ pedido.anticipo }}</td>
+          <td style="color: #e74c3c; font-weight: bold;">${{ pedido.saldo }}</td>
+          <td>
+            <span class="badge" [style.background-color]="pedido.estatus === 'Liquidado' ? '#2ecc71' : '#f39c12'">
+              {{ pedido.estatus }}
+            </span>
+          </td>
+          <td class="celda-acciones">
+            <button *ngIf="pedido.estatus !== 'Liquidado'" class="btn-editar" (click)="liquidarPedido(pedido.id)"
+              style="background-color: #2ecc71;">
+              Liquidar Saldo
+            </button>
+            <span *ngIf="pedido.estatus === 'Liquidado'" style="color: #2ecc71; font-weight: bold;">✔️ Pagado </span>
+
+            <button *ngIf="rolActual === 'Administrador'" class="btn-eliminar" (click)="eliminarPedido(pedido.id)"
+              style="background-color: #e74c3c; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer; margin-left: 8px;">
+              Borrar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="pedidos.length === 0">
+          <td colspan="10" style="text-align: center; color: #888;">No hay pedidos registrados aún.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

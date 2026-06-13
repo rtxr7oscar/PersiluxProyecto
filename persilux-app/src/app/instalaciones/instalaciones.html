@@ -1,0 +1,86 @@
+<div class="contenedor-principal">
+  <div class="cabecera">
+    <h2>Agenda de Instalaciones</h2>
+    <button class="btn-nuevo" (click)="toggleFormulario()">
+      {{ mostrarFormulario ? 'Cancelar' : '+ Agendar Instalación' }}
+    </button>
+  </div>
+
+  <div class="tarjeta-formulario" *ngIf="mostrarFormulario">
+    <h3>Detalles de la Cita</h3>
+    <div class="grid-inputs">
+      
+      <select [(ngModel)]="nuevaInstalacion.pedido_id" (change)="autocompletarDireccion()">
+        <option value="" disabled selected>Selecciona el Pedido...</option>
+        <option *ngFor="let ped of pedidos" [value]="ped.id">
+          Folio #{{ ped.id }} - {{ ped.cliente_nombre }}
+        </option>
+      </select>
+
+      <select [(ngModel)]="nuevaInstalacion.empleado_id">
+        <option value="" disabled selected>Asignar Instalador...</option>
+        <option *ngFor="let emp of empleados" [value]="emp.id">
+          {{ emp.nombre }} ({{ emp.id }})
+        </option>
+      </select>
+
+      <input type="date" [(ngModel)]="nuevaInstalacion.fecha_programada">
+
+      <input type="text" [(ngModel)]="nuevaInstalacion.direccion_instalacion" placeholder="Dirección exacta de instalación">
+
+    </div>
+    <div class="acciones-form">
+      <button class="btn-guardar" (click)="guardarInstalacion()" style="background-color: #27ae60;">Agendar</button>
+    </div>
+  </div>
+
+  <div class="tarjeta-tabla">
+    <table>
+      <thead>
+        <tr>
+          <th>ID Cita</th>
+          <th>Folio Pedido</th>
+          <th>Cliente</th>
+          <th>Fecha Programada</th>
+          <th>Dirección</th>
+          <th>Instalador</th>
+          <th>Estatus</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let inst of instalaciones">
+          <td><strong>#{{ inst.id }}</strong></td>
+          <td>Pedido #{{ inst.pedido_id }}</td>
+          <td>{{ inst.cliente_nombre }}</td>
+          <td><strong>{{ inst.fecha_programada | date:'dd/MM/yyyy' }}</strong></td>
+          <td>{{ inst.direccion_instalacion }}</td>
+          <td>{{ inst.empleado_nombre }}</td>
+          <td>
+            <span class="badge" [style.background-color]="inst.estatus === 'Completada' ? '#2ecc71' : '#f39c12'">
+              {{ inst.estatus }}
+            </span>
+          </td>
+          <td class="celda-acciones">
+            <button *ngIf="inst.estatus === 'Pendiente'" 
+                    class="btn-editar" 
+                    (click)="cambiarEstatus(inst.id, 'Completada')"
+                    style="background-color: #27ae60;">
+              Marcar Lista
+            </button>
+            <span *ngIf="inst.estatus === 'Completada'" style="color: #27ae60; font-weight: bold;">✔️ Lista</span>
+
+            <button class="btn-eliminar" 
+                    (click)="eliminarInstalacion(inst.id)" 
+                    style="background-color: #e74c3c; margin-left: 8px; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer;">
+              Cancelar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="instalaciones.length === 0">
+          <td colspan="8" style="text-align: center; color: #888;">No hay instalaciones en la agenda.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

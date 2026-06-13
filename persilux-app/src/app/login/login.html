@@ -1,0 +1,22 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo-area">
+      <h1>Persilux</h1>
+      <p>Sistema de Gestión Administrativa</p>
+    </div>
+    
+    <div class="form-group">
+      <label>Usuario</label>
+      <input type="text" [(ngModel)]="usuario.username" placeholder="Ingresa tu usuario">
+    </div>
+    
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" [(ngModel)]="usuario.password" placeholder="••••••••">
+    </div>
+
+    <p class="error-msg" *ngIf="error">Credenciales incorrectas. Intenta de nuevo.</p>
+
+    <button (click)="entrar()">Iniciar Sesión</button>
+  </div>
+</div>

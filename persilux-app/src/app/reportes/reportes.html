@@ -1,0 +1,85 @@
+<div class="contenedor-principal">
+  <div class="cabecera">
+    <h2>📊 Dashboard y Reportes Gerenciales</h2>
+  </div>
+
+  <div class="tarjeta-formulario" style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <div>
+      <label><strong>Fecha Inicio:</strong></label><br>
+      <input type="date" [(ngModel)]="fechaInicio" style="padding: 8px; margin-top: 5px;">
+    </div>
+    <div>
+      <label><strong>Fecha Fin:</strong></label><br>
+      <input type="date" [(ngModel)]="fechaFin" style="padding: 8px; margin-top: 5px;">
+    </div>
+    <div>
+      <label><strong>Vendedor:</strong></label><br>
+      <select [(ngModel)]="vendedor_id" style="padding: 8px; margin-top: 5px;">
+        <option value="todos">Todos los vendedores</option>
+        <option *ngFor="let ven of vendedores" [value]="ven.id">
+          {{ ven.nombre }}
+        </option>
+      </select>
+    </div>
+
+    <button (click)="generarReporte()" style="background-color: #2980b9; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+      🔍 Filtrar
+    </button>
+
+    <button (click)="exportarExcel()" style="background-color: #27ae60; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;" *ngIf="detalleVentas.length > 0">
+      📥 Exportar a Excel
+    </button>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 20px;">
+    
+    <div style="background: #2980b9; color: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <h3 style="margin: 0; font-size: 1.1rem;">Total Valuado (Pedidos)</h3>
+      <p style="font-size: 2rem; margin: 10px 0 0 0; font-weight: bold;">${{ resumen.ingresosVendidos }}</p>
+    </div>
+
+    <div style="background: #27ae60; color: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <h3 style="margin: 0; font-size: 1.1rem;">Caja Real (Dinero Cobrado)</h3>
+      <p style="font-size: 2rem; margin: 10px 0 0 0; font-weight: bold;">${{ resumen.ingresosRecaudados }}</p>
+    </div>
+
+    <div style="background: #8e44ad; color: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <h3 style="margin: 0; font-size: 1.1rem;">Cantidad Pedidos</h3>
+      <p style="font-size: 2rem; margin: 10px 0 0 0; font-weight: bold;">{{ resumen.cantidadVentas }}</p>
+    </div>
+
+  </div>
+
+  <div class="tarjeta-tabla" style="margin-top: 20px;">
+    <h3>Desglose de Ventas</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Folio</th>
+          <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Producto</th>
+          <th>Total</th>
+          <th>Estatus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let venta of detalleVentas">
+          <td><strong>#{{ venta.folio }}</strong></td>
+          <td>{{ venta.fecha_registro | date:'dd/MM/yyyy' }}</td>
+          <td>{{ venta.cliente_nombre }}</td>
+          <td>{{ venta.producto_nombre }}</td>
+          <td><strong>${{ venta.total }}</strong></td>
+          <td>
+            <span class="badge" [style.background-color]="venta.estatus === 'Liquidado' ? '#27ae60' : '#f39c12'" style="color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">
+              {{ venta.estatus }}
+            </span>
+          </td>
+        </tr>
+        <tr *ngIf="detalleVentas.length === 0">
+          <td colspan="6" style="text-align: center; color: #888; padding: 20px;">No hay datos para mostrar en este periodo.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

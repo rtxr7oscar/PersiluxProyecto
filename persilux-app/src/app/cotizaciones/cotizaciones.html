@@ -1,0 +1,82 @@
+<div class="contenedor-principal">
+  <div class="cabecera">
+    <h2>Presupuestos / Cotizaciones</h2>
+    <button class="btn-nuevo" (click)="toggleFormulario()">
+      {{ mostrarFormulario ? 'Cancelar' : '+ Nueva Cotización' }}
+    </button>
+  </div>
+
+  <div class="tarjeta-formulario" *ngIf="mostrarFormulario">
+    <h3>Armar Cotización</h3>
+    <div class="grid-inputs">
+      
+      <select [(ngModel)]="nuevaCotizacion.cliente_id">
+        <option value="" disabled selected>Selecciona el prospecto...</option>
+        <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nombre }}</option>
+      </select>
+
+      <select [(ngModel)]="nuevaCotizacion.producto_id" (change)="calcularTotal()">
+        <option value="" disabled selected>Selecciona el producto...</option>
+        <option *ngFor="let producto of productos" [value]="producto.id">{{ producto.nombre }} (${{ producto.precio }})</option>
+      </select>
+
+      <input type="text" [(ngModel)]="nuevaCotizacion.medidas" placeholder="Medidas (ej. 1.50 x 2.00 mt)">
+      <input type="number" [(ngModel)]="nuevaCotizacion.cantidad" (input)="calcularTotal()" min="1" placeholder="Cantidad">
+
+      <div class="total-box" style="grid-column: 1 / -1; background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-top: 10px; border-left: 4px solid #3498db; text-align: center; font-size: 1.2rem;">
+        <strong>Total Cotizado:</strong> <span style="color: #2c3e50;">${{ nuevaCotizacion.total }}</span>
+      </div>
+
+    </div>
+    <div class="acciones-form">
+      <button class="btn-guardar" (click)="guardarCotizacion()" style="background-color: #3498db;">Guardar Cotización</button>
+    </div>
+  </div>
+
+  <div class="tarjeta-tabla">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Producto</th>
+          <th>Medidas</th>
+          <th>Cant.</th>
+          <th>Total Presupuestado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cot of cotizaciones">
+          <td><strong>#{{ cot.id }}</strong></td>
+          <td>{{ cot.cliente_nombre }}</td>
+          <td>{{ cot.producto_nombre }}</td>
+          <td>{{ cot.medidas || 'N/A' }}</td>
+          <td>{{ cot.cantidad }}</td>
+          <td><strong>${{ cot.total }}</strong></td>
+          <td class="celda-acciones">
+            <button class="btn-editar" 
+                    (click)="editarCotizacion(cot)"
+                    style="background-color: #f39c12; margin-right: 8px; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer;">
+              Editar
+            </button>
+            <button class="btn-editar" 
+                    (click)="convertirAVenta(cot)"
+                    style="background-color: #9b59b6; margin-right: 8px; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer;">
+              Convertir a pedido
+            </button>
+            
+            <button class="btn-eliminar" 
+                    (click)="eliminarCotizacion(cot.id)" 
+                    style="background-color: #e74c3c; margin-left: 8px; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer;">
+              Borrar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="cotizaciones.length === 0">
+          <td colspan="7" style="text-align: center; color: #888;">No hay cotizaciones activas.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

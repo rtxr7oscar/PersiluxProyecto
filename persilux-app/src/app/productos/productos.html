@@ -1,0 +1,50 @@
+<div class="contenedor-principal">
+  <div class="cabecera">
+    <h2>Catálogo de Productos</h2>
+    <button class="btn-nuevo" (click)="toggleFormulario()">{{ mostrarFormulario ? 'Cancelar' : '+ Nuevo Producto'
+      }}</button>
+  </div>
+
+  <div class="tarjeta-formulario" *ngIf="mostrarFormulario">
+    <h3>Registrar Persiana / Producto</h3>
+    <div class="grid-inputs">
+      <input type="text" [(ngModel)]="nuevoProducto.nombre" placeholder="Nombre del producto">
+      <input type="text" [(ngModel)]="nuevoProducto.descripcion" placeholder="Descripción breve">
+      <input type="number" [(ngModel)]="nuevoProducto.precio" placeholder="Precio ($)">
+    </div>
+    <div class="acciones-form">
+      <button class="btn-guardar" (click)="guardarProducto()">
+        {{ modoEdicion ? 'Actualizar Producto' : 'Guardar Producto' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="tarjeta-tabla">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Precio</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of productos">
+          <td><strong>#{{ producto.id }}</strong></td>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.descripcion }}</td>
+          <td>${{ producto.precio }}</td>
+          <td class="celda-acciones">
+            <button class="btn-editar" (click)="editarProducto(producto)">Editar</button>
+            <button *ngIf="rolActual === 'Administrador'" class="btn-eliminar" (click)="eliminarProducto(producto.id)"
+              style="background-color: #e74c3c; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer;">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

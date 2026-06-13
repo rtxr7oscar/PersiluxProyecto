@@ -1,0 +1,56 @@
+<app-login 
+  *ngIf="!estaAutenticado" 
+  (loginExitoso)="alEntrar()">
+</app-login>
+
+<div *ngIf="estaAutenticado">
+  
+  <nav style="background-color: #1a252f; padding: 1rem 2rem; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <h1 style="color: #00d2ff; margin: 0; font-family: sans-serif; font-size: 1.8rem; margin-right: 3rem;">Persilux</h1>
+    
+    <div style="display: flex; gap: 1rem;">
+      <button (click)="vistaActual = 'clientes'" 
+              [style.border-bottom]="vistaActual === 'clientes' ? '3px solid #00d2ff' : 'none'" 
+              class="nav-btn">👨‍💼 Clientes</button>
+      
+      <button (click)="vistaActual = 'productos'" 
+              [style.border-bottom]="vistaActual === 'productos' ? '3px solid #00d2ff' : 'none'" 
+              class="nav-btn">🏷️ Productos</button>
+      
+      <button (click)="vistaActual = 'empleados'" 
+              [style.border-bottom]="vistaActual === 'empleados' ? '3px solid #00d2ff' : 'none'" 
+              class="nav-btn">👷 Empleados</button>
+
+      <button class="nav-btn" (click)="vistaActual = 'cotizaciones'">📝 Cotizaciones</button>
+
+      <button (click)="vistaActual = 'pedidos'" 
+              [style.border-bottom]="vistaActual === 'pedidos' ? '3px solid #00d2ff' : 'none'" 
+              class="nav-btn">📦 Pedidos</button>
+      
+      <button (click)="vistaActual = 'instalaciones'" 
+              [style.border-bottom]="vistaActual === 'instalaciones' ? '3px solid #00d2ff' : 'none'" 
+              class="nav-btn">🛠️ Instalaciones</button>
+     <button (click)="vistaActual = 'reportes'" 
+              [style.border-bottom]="vistaActual === 'reportes' ? '3px solid #00d2ff' : 'none'" 
+              class="nav-btn"
+              *ngIf="rolActual === 'Administrador'">
+              📊 Reportes Gerenciales
+      </button>
+    </div>
+
+    <button (click)="estaAutenticado = false" style="margin-left: auto; background: none; border: 1px solid #e74c3c; color: #e74c3c; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+      Cerrar Sesión
+    </button>
+  </nav>
+
+  <main style="background-color: #f4f7f6; min-height: 100vh;">
+    <app-clientes *ngIf="vistaActual === 'clientes'"></app-clientes>
+    <app-productos *ngIf="vistaActual === 'productos'"></app-productos>
+    <app-empleados *ngIf="vistaActual === 'empleados'"></app-empleados>
+    <app-cotizaciones *ngIf="vistaActual === 'cotizaciones'"></app-cotizaciones>
+    <app-pedidos *ngIf="vistaActual === 'pedidos'"></app-pedidos>
+    <app-instalaciones *ngIf="vistaActual === 'instalaciones'"></app-instalaciones>
+    <app-reportes *ngIf="vistaActual === 'reportes'"></app-reportes>
+  </main>
+
+</div>

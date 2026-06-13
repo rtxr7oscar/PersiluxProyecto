@@ -1,0 +1,54 @@
+<div class="contenedor-principal">
+  <div class="cabecera">
+    <h2>Gestión de Personal</h2>
+    <button class="btn-nuevo" (click)="toggleFormulario()">{{ mostrarFormulario ? 'Cancelar' : '+ Nuevo Empleado' }}</button>
+  </div>
+
+  <div class="tarjeta-formulario" *ngIf="mostrarFormulario">
+    <h3>{{ modoEdicion ? 'Actualizar Datos' : 'Registrar Empleado' }}</h3>
+    <div class="grid-inputs">
+      <input type="text" [(ngModel)]="nuevoEmpleado.id" placeholder="Matrícula / ID (ej. ZS23...)" [disabled]="modoEdicion">
+      <input type="text" [(ngModel)]="nuevoEmpleado.nombre" placeholder="Nombre completo">
+      
+      <select [(ngModel)]="nuevoEmpleado.rol">
+        <option value="" disabled selected>Selecciona un rol...</option>
+        <option value="Administrador">Administrador</option>
+        <option value="Vendedor">Vendedor</option>
+        <option value="Instalador">Instalador</option>
+      </select>
+      
+      <input type="text" [(ngModel)]="nuevoEmpleado.telefono" placeholder="Teléfono">
+    </div>
+    <div class="acciones-form">
+      <button class="btn-guardar" (click)="guardarEmpleado()">
+        {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="tarjeta-tabla">
+    <table>
+      <thead>
+        <tr><th>Matrícula (ID)</th><th>Nombre</th><th>Rol</th><th>Teléfono</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let emp of empleados">
+          <td><strong>{{ emp.id }}</strong></td>
+          <td>{{ emp.nombre }}</td>
+          <td><span class="badge">{{ emp.rol }}</span></td>
+          <td>{{ emp.telefono }}</td>
+          <td class="celda-acciones">
+            <button class="btn-editar" (click)="editarEmpleado(emp)">Editar</button>
+            
+            <button *ngIf="rolActual === 'Administrador'" 
+                    class="btn-eliminar" 
+                    (click)="eliminarEmpleado(emp.id)" 
+                    style="background-color: #e74c3c; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer;">
+              Baja
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
